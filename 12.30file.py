@@ -2,29 +2,36 @@
 """
 需求：把一堆.JAVA文件中的文本拿出来并保存到word中（做软著）
 """
-from docx import Document#百度得到这个有趣强大的库
-document = Document()
+from docx import Document  # 百度得到这个有趣强大的库
 import os
-def get_filename(path,filetype):
-    name=[]
-    for root,dirs,files in os.walk(path):
+#######以下三个变量分别是根目录路径、需要读取的文件种类、生成word的文件路径，自己填########
+path = 'E:\\JAVA\\Gitproject\\sign_page\\signSystem-master\\signSystem-master\\src\\main\\java'
+filetype = 'java'
+savepath = 'E:\\program\\Gitcopy\\python\\signSystem.docx'
+################
 
-        for i in files:
+document = Document()
 
-            if filetype in i:
+linesnum = 0
+filepath = []
+for root, dirs, files in os.walk(path):
 
-                name.append(i) 
+    for file in files:
 
-    return name
-name=get_filename('F:\\school\\rz\\2','java')#文件路径可以自己改
-print(name)#得到文件中所有.java结尾的文件
-data=[]
-for file in name:
-    document.add_heading(file)#以文件名为小标题
-    f=open('F:\\school\\rz\\2\\'+file,encoding="utf-8")
-    nr=f.read()
-    paragraph = document.add_paragraph(nr)
-    data.append(nr)           
-    f.close()      
-print(data)
-document.save('test1.docx')
+        if filetype in file:
+            document.add_heading(file)  # 以文件名为小标题
+            file = os.path.join(root, file)  # 标题写好再得到路径
+            f = open(file, encoding="utf-8")
+            linesnum += len(f.readlines())
+            f.seek(0)
+            nr = f.read()
+            paragraph = document.add_paragraph(nr)
+            # data.append(nr)
+            f.close()
+
+            filepath.append(file)
+
+document.save(savepath)
+
+print(filepath)  # 文件中所有.java结尾的文件
+print("---java文件总行数为："+str(linesnum)+" ---")
